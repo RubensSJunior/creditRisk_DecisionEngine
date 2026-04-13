@@ -152,15 +152,6 @@ Acesse em:
 http://localhost:5000
 ```
 
----
-
-## 📌 Principais Características
-
-* Pipeline completo baseado em SEMMA
-* Estrutura organizada para experimentação
-* Otimização de hiperparâmetros (Random Search e Optuna)
-* Auditoria e rastreabilidade com MLflow
-
 ## 👤 Autor
 
 Rubens dos Santos Junior
