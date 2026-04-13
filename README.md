@@ -1,134 +1,166 @@
-# 💳 Projeto de Credit Risk & Decision Engine
+# Credit Risk Decision Engine
 
-## 📌 Descrição do Projeto
+## 📌 Visão Geral
 
-Este projeto tem como objetivo construir um **motor de decisão de crédito (Credit Decision Engine)** utilizando técnicas de **Machine Learning** e **análise de risco**.
+Este projeto tem como objetivo construir um modelo de Machine Learning capaz de prever a **probabilidade de inadimplência (risco de crédito)** utilizando o dataset *Give Me Some Credit* do Kaggle.
 
-A aplicação permite:
+O projeto segue a metodologia **SEMMA**:
 
-* Estimar a **probabilidade de inadimplência (PD)** de clientes
-* Simular decisões de concessão de crédito com base em diferentes **thresholds**
-* Avaliar o impacto financeiro de estratégias de crédito
-* Explicar decisões do modelo utilizando **SHAP (Explainability)**
-
-Além disso, o projeto conta com uma interface interativa desenvolvida em **Streamlit**, com duas funcionalidades principais:
-
-* 📊 **Simulação Batch**: análise de carteira de crédito e impacto financeiro
-* 👤 **Simulação Individual**: avaliação de risco de um cliente específico
+* **Sample** – Seleção e divisão inicial dos dados
+* **Explore** – Análise exploratória (EDA)
+* **Modify** – Engenharia e tratamento de variáveis
+* **Model** – Treinamento, ajuste e avaliação dos modelos
+* **Assess** – (em desenvolvimento) Validação e análise de negócio
 
 ---
 
-## ⚙️ Como instalar o projeto
+## 📂 Estrutura do Projeto
 
-### 1. Clone o repositório
-
-```bash
-git clone https://github.com/RubensSJunior/creditRisk_DecisionEngine
-cd creditRisk_DecisionEngine
+```
+.
+├── .gitattributes
+├── .gitignore
+├── .python-version
+├── README.md
+├── data
+│   ├── final
+│   ├── processed
+│   │   ├── X_test.parquet
+│   │   ├── X_train.parquet
+│   │   ├── test_data.csv
+│   │   ├── train_data.csv
+│   │   ├── y_test.parquet
+│   │   └── y_train.parquet
+│   └── raw
+│       ├── Data Dictionary.xls
+│       ├── cs-test.csv
+│       ├── cs-training.csv
+│       └── sampleEntry.csv
+├── mlflow.db
+├── notebook
+│   ├── 01_sample.ipynb
+│   ├── 02_explore.ipynb
+│   ├── 03_modify.ipynb
+│   ├── 04.00_model_baseline.ipynb
+│   ├── 04.01_model_lgbm.ipynb
+│   ├── 04.02_model_deepLearning.ipynb
+│   └── 05_assess.ipynb
+├── poetry.lock
+├── pyproject.toml
+├── src
+│   └── creditrisk_decisionengine
+│       ├── __init__.py
+│       └── app
+│           ├── Home.py
+│           └── pages
+│               ├── 1_Batch_Simulation.py
+│               └── 2_Individual_Simulation.py
+└── tests
+    └── __init__.py
 ```
 
 ---
 
-### 2. Ative o ambiente virtual
+## ⚙️ Ambiente
 
-No Windows:
+O projeto utiliza o **Poetry** para gerenciamento de dependências.
 
-```bash
-.\.venv\Scripts\activate
-```
-
-Ou, conforme o caminho informado:
-
-```bash
-creditRisk_DecisionEngine\.venv\Scripts\activate
-```
-
----
-
-### 3. Instale as dependências
-
-Caso esteja utilizando Poetry:
+### Instalar dependências
 
 ```bash
 poetry install
 ```
 
-Ou, caso utilize pip:
+### Ativar ambiente
 
 ```bash
-pip install -r requirements.txt
+poetry shell
 ```
 
 ---
 
-## 🚀 Como executar a aplicação (Streamlit)
+## 📊 Dataset
 
-### 1. Navegue até a pasta do app
+* Fonte: Kaggle – *Give Me Some Credit*
+* Tipo: Classificação binária
+* Target: Inadimplente (1) vs Não inadimplente (0)
+
+---
+
+## 🧠 Abordagem de Modelagem
+
+### 🔹 Modelo Baseline
+
+* Regressão Logística
+* Tratamento de desbalanceamento com `class_weight='balanced'`
+
+### 🔹 Modelos Avançados
+
+#### 🌲 LightGBM + RandomizedSearchCV
+
+* Busca aleatória de hiperparâmetros
+* Validação cruzada estratificada
+* Otimização baseada em ROC-AUC
+
+#### ⚡ LightGBM + Optuna
+
+* Otimização Bayesiana
+* Exploração mais eficiente do espaço de busca
+* Foco em maximizar ROC-AUC
+
+---
+
+## 📈 Estratégia de Avaliação
+
+* Métrica principal: **ROC-AUC**
+* Análises complementares:
+
+  * Matriz de confusão
+  * Classification report
+  * Ajuste de threshold
+
+---
+
+## 🧪 Monitoramento de Experimentos
+
+O projeto utiliza o **MLflow** para rastreamento e auditoria dos modelos.
+
+### Estrutura
+
+* **Experimento:** `credit_default_modeling`
+* **Runs:**
+
+  * Baseline (Regressão Logística)
+  * LightGBM (Random Search)
+  * LightGBM (Optuna)
+
+### Informações registradas
+
+* Parâmetros (hiperparâmetros)
+* Métricas (ROC-AUC)
+* Artefatos (modelos treinados, gráficos, etc.)
+
+### Executar a interface do MLflow
 
 ```bash
-cd creditRisk_DecisionEngine\src\creditrisk_decisionengine\app
+poetry run mlflow ui
+```
+
+Acesse em:
+
+```
+http://localhost:5000
 ```
 
 ---
 
-### 2. Execute o Streamlit
+## 📌 Principais Características
 
-```bash
-streamlit run Home.py
-```
+* Pipeline completo baseado em SEMMA
+* Estrutura organizada para experimentação
+* Otimização de hiperparâmetros (Random Search e Optuna)
+* Auditoria e rastreabilidade com MLflow
 
----
+## 👤 Autor
 
-### 3. Acesse no navegador
-
-Após executar o comando, a aplicação será aberta automaticamente no navegador.
-Caso não abra, acesse manualmente:
-
-```
-http://localhost:8501
-```
-
----
-
-## 🧠 Observações
-
-* Certifique-se de que os arquivos de modelo (`.pkl`) e dados estejam corretamente posicionados nos diretórios esperados.
-* O projeto utiliza conceitos de:
-
-  * Modelagem de risco de crédito
-  * Engenharia de features
-  * Avaliação com métricas (ROC AUC, Recall, Precision)
-  * Simulação financeira com juros compostos
-  * Explainability com SHAP
-
----
-
-## 📌 Estrutura resumida
-
-```
-creditRisk_DecisionEngine/
-│
-├── .venv/
-├── src/
-│   └── creditrisk_decisionengine/
-│       └── app/
-│           ├── Home.py
-│           ├── pages/
-│
-├── data/
-├── model/
-└── README.md
-```
-
----
-
-## ✅ Resultado
-
-O projeto entrega um fluxo completo de:
-
-* Modelagem de risco
-* Tomada de decisão
-* Avaliação financeira
-* Interface interativa
-
-Simulando de forma prática como sistemas de crédito são utilizados no mundo real.
+Rubens dos Santos Junior
